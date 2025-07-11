@@ -102,6 +102,11 @@ def fetch_detalhado_if_promissor(nome, link):
             return nome, descricao[:5000], link, inscricao_ate
     return None
 
+def separar_palavras_coladas(texto):
+    if " " in texto:
+        return texto
+    return ' '.join(re.findall(r'[A-ZÁÉÍÓÚÂÊÎÔÛÃÕÇ][a-záéíóúâêîôûãõç]*', texto.title()))
+
 def extract_state_concursos(soup):
     concursos = []
     blocos = soup.find_all("div", class_="ca")
@@ -165,7 +170,8 @@ if __name__ == '__main__':
         match = re.search(r"(?i)(prefeitura|camara|tce|tj|sefaz|tribunal|cge|fhemig|procuradoria|ministerio publico)[^-\n]*", row['Concurso'])
         nome_base = match.group(0).strip() if match else row['Concurso'].split("-")[0].strip()
         cidade_limpa = limpar_nome_cidade(nome_base)
-        chave_local = f"{cidade_limpa}, {row['Estado']}, Brasil"
+        cidade_formatada = separar_palavras_coladas(cidade_limpa)
+        chave_local = f"{cidade_formatada}, {row['Estado']}, Brasil"
         concursos_por_local[chave_local].append(row)
 
     print("📍 Gerando pins únicos por cidade...")
