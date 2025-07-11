@@ -249,6 +249,7 @@ if __name__ == '__main__':
         print(f"📌 Pin único criado para {local.replace(', -, Brasil', '').replace(', Brasil', '')}")
 
     arquivo = f"ConcursosAtivos{hoje}.kml"
+    kml.save(arquivo)
     if os.path.exists(arquivo):
         print(f"✅ Arquivo encontrado: {arquivo}")
         sys.exit(0)
