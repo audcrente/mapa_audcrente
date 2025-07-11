@@ -29,5 +29,5 @@ jobs:
       - name: Upload do KML como artefato
         uses: actions/upload-artifact@v4
         with:
-          - name: Verificar arquivo KML gerado
-            run: ls -lh ConcursosAtivos*.kml
+          name: kml-concursos
+          path: ConcursosAtivos*.kml
