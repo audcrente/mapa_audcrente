@@ -8,6 +8,8 @@ import unidecode
 import simplekml
 from opencage.geocoder import OpenCageGeocode
 from collections import defaultdict
+import os
+import sys
 
 def normalize_text(texto):
     return unidecode.unidecode(texto.lower().replace("-", " ")).strip()
