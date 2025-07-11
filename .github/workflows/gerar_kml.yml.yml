@@ -1,0 +1,33 @@
+name: Gerar KML Concursos Diariamente
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Executa todos os dias às 6h da manhã (UTC-3)
+  workflow_dispatch:  # Permite execução manual pelo botão "Run workflow"
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar o repositório
+        uses: actions/checkout@v3
+
+      - name: Configurar Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar script Python
+        run: python script.py
+
+      - name: Upload do KML como artefato
+        uses: actions/upload-artifact@v3
+        with:
+          name: kml-concursos
+          path: ConcursosAtivos*.kml

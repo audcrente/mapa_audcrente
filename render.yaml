@@ -1,0 +1,8 @@
+services: []
+jobs:
+  - name: gerar_kml_diario
+    schedule: "0 6 * * *"  # todo dia às 6h da manhã UTC
+    envVars:
+      - key: OPENCAGE_API_KEY
+        value: sua_chave_aqui
+    startCommand: "python script.py"
