@@ -1,4 +1,4 @@
-name: Gerar KML Concursos Diariamente
+name: Gerar e Publicar KML Concursos
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-script:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,8 +26,13 @@ jobs:
       - name: Executar script Python
         run: python script.py
 
-      - name: Upload do KML como artefato
-        uses: actions/upload-artifact@v4
+      - name: Criar pasta e copiar KML
+        run: |
+          mkdir -p public_kml
+          cp ConcursosAtivos*.kml public_kml/
+
+      - name: Publicar no GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: kml-concursos
-          path: ConcursosAtivos*.kml
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public_kml
