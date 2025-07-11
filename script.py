@@ -6,7 +6,8 @@ import requests
 import re
 import unidecode
 import simplekml
-from opencage.geocoder import OpenCageGeocode
+from geopy.geocoders import Nominatim
+from geopy.exc import GeocoderTimedOut
 from collections import defaultdict
 import os
 import sys
@@ -162,8 +163,7 @@ if __name__ == '__main__':
 
     print("🌍 Gerando arquivo KML para o Google Earth...")
     kml = simplekml.Kml()
-    OPENCAGE_API_KEY = "9c733e494d164c62be60589f6c7a38ac"
-    geocoder = OpenCageGeocode(OPENCAGE_API_KEY)
+    geocoder = Nominatim(user_agent="mapa-concursos")
     coordenadas_cache = {}
 
     print("📦 Agrupando concursos por cidade...")
@@ -181,14 +181,17 @@ if __name__ == '__main__':
         if local in coordenadas_cache:
             longitude, latitude = coordenadas_cache[local]
         else:
-            results = geocoder.geocode(local, no_annotations=1, language='pt')
-            if results:
-                location = results[0]['geometry']
-                latitude = location['lat']
-                longitude = location['lng']
-                coordenadas_cache[local] = (longitude, latitude)
-            else:
-                print(f"❌ Local não encontrado: {local}")
+            try:
+                location = geocoder.geocode(local, timeout=10)
+                if location:
+                    latitude = location.latitude
+                    longitude = location.longitude
+                    coordenadas_cache[local] = (longitude, latitude)
+                else:
+                    print(f"❌ Local não encontrado: {local}")
+                    continue
+            except GeocoderTimedOut:
+                print(f"⏱️ Timeout ao tentar geolocalizar: {local}")
                 continue
 
         descricao_balao = ""
