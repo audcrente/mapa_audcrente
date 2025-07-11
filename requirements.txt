@@ -1,6 +1,7 @@
 beautifulsoup4
 pandas
 requests
-simplekml
 unidecode
-opencage
+simplekml
+geopy
+lxml
