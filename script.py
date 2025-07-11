@@ -248,8 +248,16 @@ if __name__ == '__main__':
 
         print(f"📌 Pin único criado para {local.replace(', -, Brasil', '').replace(', Brasil', '')}")
 
+    import shutil
+
     arquivo = f"ConcursosAtivos{hoje}.kml"
     kml.save(arquivo)
+
+    # Copiar para pasta pública
+    os.makedirs("public_kml", exist_ok=True)
+    shutil.copy(arquivo, f"public_kml/{arquivo}")
+
+    # Verificação final
     if os.path.exists(arquivo):
         print(f"✅ Arquivo encontrado: {arquivo}")
         sys.exit(0)
