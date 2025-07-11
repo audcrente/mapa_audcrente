@@ -31,3 +31,8 @@ jobs:
         with:
           name: kml-concursos
           path: ConcursosAtivos*.kml
+          retention-days: 1  # Mantém o artefato disponível por 1 dia
+
+  chamar-publicacao:
+    needs: run-script
+    uses: ./.github/workflows/gh-pages.yml
